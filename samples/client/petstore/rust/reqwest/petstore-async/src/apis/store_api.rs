@@ -10,29 +10,29 @@
 
 
 use reqwest;
-
-use crate::apis::ResponseContent;
+use serde::{Deserialize, Serialize};
+use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
 /// struct for passing parameters to the method [`delete_order`]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct DeleteOrderParams {
     /// ID of the order that needs to be deleted
     pub order_id: String
 }
 
 /// struct for passing parameters to the method [`get_order_by_id`]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct GetOrderByIdParams {
     /// ID of pet that needs to be fetched
     pub order_id: i64
 }
 
 /// struct for passing parameters to the method [`place_order`]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct PlaceOrderParams {
     /// order placed for purchasing the pet
-    pub order: crate::models::Order
+    pub order: models::Order
 }
 
 
@@ -47,7 +47,7 @@ pub enum DeleteOrderSuccess {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetInventorySuccess {
-    Status200(::std::collections::HashMap<String, i32>),
+    Status200(std::collections::HashMap<String, i32>),
     UnknownValue(serde_json::Value),
 }
 
@@ -55,7 +55,7 @@ pub enum GetInventorySuccess {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetOrderByIdSuccess {
-    Status200(crate::models::Order),
+    Status200(models::Order),
     UnknownValue(serde_json::Value),
 }
 
@@ -63,7 +63,7 @@ pub enum GetOrderByIdSuccess {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PlaceOrderSuccess {
-    Status200(crate::models::Order),
+    Status200(models::Order),
     UnknownValue(serde_json::Value),
 }
 
@@ -122,13 +122,14 @@ pub async fn delete_order(configuration: &configuration::Configuration, params: 
     let local_var_resp = local_var_client.execute(local_var_req).await?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        let local_var_content = local_var_resp.text().await?;
         let local_var_entity: Option<DeleteOrderSuccess> = serde_json::from_str(&local_var_content).ok();
         let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Ok(local_var_result)
     } else {
+        let local_var_content = local_var_resp.text().await?;
         let local_var_entity: Option<DeleteOrderError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
@@ -163,13 +164,14 @@ pub async fn get_inventory(configuration: &configuration::Configuration) -> Resu
     let local_var_resp = local_var_client.execute(local_var_req).await?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        let local_var_content = local_var_resp.text().await?;
         let local_var_entity: Option<GetInventorySuccess> = serde_json::from_str(&local_var_content).ok();
         let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Ok(local_var_result)
     } else {
+        let local_var_content = local_var_resp.text().await?;
         let local_var_entity: Option<GetInventoryError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
@@ -197,13 +199,14 @@ pub async fn get_order_by_id(configuration: &configuration::Configuration, param
     let local_var_resp = local_var_client.execute(local_var_req).await?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        let local_var_content = local_var_resp.text().await?;
         let local_var_entity: Option<GetOrderByIdSuccess> = serde_json::from_str(&local_var_content).ok();
         let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Ok(local_var_result)
     } else {
+        let local_var_content = local_var_resp.text().await?;
         let local_var_entity: Option<GetOrderByIdError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
@@ -232,13 +235,14 @@ pub async fn place_order(configuration: &configuration::Configuration, params: P
     let local_var_resp = local_var_client.execute(local_var_req).await?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        let local_var_content = local_var_resp.text().await?;
         let local_var_entity: Option<PlaceOrderSuccess> = serde_json::from_str(&local_var_content).ok();
         let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Ok(local_var_result)
     } else {
+        let local_var_content = local_var_resp.text().await?;
         let local_var_entity: Option<PlaceOrderError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))

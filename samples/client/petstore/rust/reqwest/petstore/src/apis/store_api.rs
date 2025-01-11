@@ -10,8 +10,8 @@
 
 
 use reqwest;
-
-use crate::apis::ResponseContent;
+use serde::{Deserialize, Serialize};
+use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
 
@@ -63,14 +63,14 @@ pub fn delete_order(configuration: &configuration::Configuration, order_id: &str
     }
 
     let local_var_req = local_var_req_builder.build()?;
-    let mut local_var_resp = local_var_client.execute(local_var_req)?;
+    let local_var_resp = local_var_client.execute(local_var_req)?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text()?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         Ok(())
     } else {
+        let local_var_content = local_var_resp.text()?;
         let local_var_entity: Option<DeleteOrderError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
@@ -78,7 +78,7 @@ pub fn delete_order(configuration: &configuration::Configuration, order_id: &str
 }
 
 /// Returns a map of status codes to quantities
-pub fn get_inventory(configuration: &configuration::Configuration, ) -> Result<::std::collections::HashMap<String, i32>, Error<GetInventoryError>> {
+pub fn get_inventory(configuration: &configuration::Configuration, ) -> Result<std::collections::HashMap<String, i32>, Error<GetInventoryError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -99,14 +99,15 @@ pub fn get_inventory(configuration: &configuration::Configuration, ) -> Result<:
     };
 
     let local_var_req = local_var_req_builder.build()?;
-    let mut local_var_resp = local_var_client.execute(local_var_req)?;
+    let local_var_resp = local_var_client.execute(local_var_req)?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text()?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        let local_var_content = local_var_resp.text()?;
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
+        let local_var_content = local_var_resp.text()?;
         let local_var_entity: Option<GetInventoryError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
@@ -114,7 +115,7 @@ pub fn get_inventory(configuration: &configuration::Configuration, ) -> Result<:
 }
 
 /// For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions
-pub fn get_order_by_id(configuration: &configuration::Configuration, order_id: i64) -> Result<crate::models::Order, Error<GetOrderByIdError>> {
+pub fn get_order_by_id(configuration: &configuration::Configuration, order_id: i64) -> Result<models::Order, Error<GetOrderByIdError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -127,14 +128,15 @@ pub fn get_order_by_id(configuration: &configuration::Configuration, order_id: i
     }
 
     let local_var_req = local_var_req_builder.build()?;
-    let mut local_var_resp = local_var_client.execute(local_var_req)?;
+    let local_var_resp = local_var_client.execute(local_var_req)?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text()?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        let local_var_content = local_var_resp.text()?;
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
+        let local_var_content = local_var_resp.text()?;
         let local_var_entity: Option<GetOrderByIdError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
@@ -142,7 +144,7 @@ pub fn get_order_by_id(configuration: &configuration::Configuration, order_id: i
 }
 
 /// 
-pub fn place_order(configuration: &configuration::Configuration, order: crate::models::Order) -> Result<crate::models::Order, Error<PlaceOrderError>> {
+pub fn place_order(configuration: &configuration::Configuration, order: models::Order) -> Result<models::Order, Error<PlaceOrderError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -156,14 +158,15 @@ pub fn place_order(configuration: &configuration::Configuration, order: crate::m
     local_var_req_builder = local_var_req_builder.json(&order);
 
     let local_var_req = local_var_req_builder.build()?;
-    let mut local_var_resp = local_var_client.execute(local_var_req)?;
+    let local_var_resp = local_var_client.execute(local_var_req)?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text()?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        let local_var_content = local_var_resp.text()?;
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
+        let local_var_content = local_var_resp.text()?;
         let local_var_entity: Option<PlaceOrderError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))

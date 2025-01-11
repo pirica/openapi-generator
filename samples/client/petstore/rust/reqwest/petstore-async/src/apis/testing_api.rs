@@ -10,8 +10,8 @@
 
 
 use reqwest;
-
-use crate::apis::ResponseContent;
+use serde::{Deserialize, Serialize};
+use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
 
@@ -27,7 +27,7 @@ pub enum TestsFileResponseGetSuccess {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum TestsTypeTestingGetSuccess {
-    Status200(crate::models::TypeTesting),
+    Status200(models::TypeTesting),
     UnknownValue(serde_json::Value),
 }
 
@@ -46,7 +46,7 @@ pub enum TestsTypeTestingGetError {
 }
 
 
-pub async fn tests_file_response_get(configuration: &configuration::Configuration) -> Result<ResponseContent<TestsFileResponseGetSuccess>, Error<TestsFileResponseGetError>> {
+pub async fn tests_file_response_get(configuration: &configuration::Configuration) -> Result<reqwest::Response, Error<TestsFileResponseGetError>> {
     let local_var_configuration = configuration;
 
     // unbox the parameters
@@ -65,13 +65,11 @@ pub async fn tests_file_response_get(configuration: &configuration::Configuratio
     let local_var_resp = local_var_client.execute(local_var_req).await?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        let local_var_entity: Option<TestsFileResponseGetSuccess> = serde_json::from_str(&local_var_content).ok();
-        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
-        Ok(local_var_result)
+        Ok(local_var_resp)
     } else {
+        let local_var_content = local_var_resp.text().await?;
         let local_var_entity: Option<TestsFileResponseGetError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
@@ -97,13 +95,14 @@ pub async fn tests_type_testing_get(configuration: &configuration::Configuration
     let local_var_resp = local_var_client.execute(local_var_req).await?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        let local_var_content = local_var_resp.text().await?;
         let local_var_entity: Option<TestsTypeTestingGetSuccess> = serde_json::from_str(&local_var_content).ok();
         let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Ok(local_var_result)
     } else {
+        let local_var_content = local_var_resp.text().await?;
         let local_var_entity: Option<TestsTypeTestingGetError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))

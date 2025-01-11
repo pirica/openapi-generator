@@ -10,8 +10,8 @@
 
 
 use reqwest;
-
-use crate::apis::ResponseContent;
+use serde::{Deserialize, Serialize};
+use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
 
@@ -84,7 +84,7 @@ pub enum UpdateUserError {
 
 
 /// This can only be done by the logged in user.
-pub fn create_user(configuration: &configuration::Configuration, user: crate::models::User) -> Result<(), Error<CreateUserError>> {
+pub fn create_user(configuration: &configuration::Configuration, user: models::User) -> Result<(), Error<CreateUserError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -106,14 +106,14 @@ pub fn create_user(configuration: &configuration::Configuration, user: crate::mo
     local_var_req_builder = local_var_req_builder.json(&user);
 
     let local_var_req = local_var_req_builder.build()?;
-    let mut local_var_resp = local_var_client.execute(local_var_req)?;
+    let local_var_resp = local_var_client.execute(local_var_req)?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text()?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         Ok(())
     } else {
+        let local_var_content = local_var_resp.text()?;
         let local_var_entity: Option<CreateUserError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
@@ -121,7 +121,7 @@ pub fn create_user(configuration: &configuration::Configuration, user: crate::mo
 }
 
 /// 
-pub fn create_users_with_array_input(configuration: &configuration::Configuration, user: Vec<crate::models::User>) -> Result<(), Error<CreateUsersWithArrayInputError>> {
+pub fn create_users_with_array_input(configuration: &configuration::Configuration, user: Vec<models::User>) -> Result<(), Error<CreateUsersWithArrayInputError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -143,14 +143,14 @@ pub fn create_users_with_array_input(configuration: &configuration::Configuratio
     local_var_req_builder = local_var_req_builder.json(&user);
 
     let local_var_req = local_var_req_builder.build()?;
-    let mut local_var_resp = local_var_client.execute(local_var_req)?;
+    let local_var_resp = local_var_client.execute(local_var_req)?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text()?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         Ok(())
     } else {
+        let local_var_content = local_var_resp.text()?;
         let local_var_entity: Option<CreateUsersWithArrayInputError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
@@ -158,7 +158,7 @@ pub fn create_users_with_array_input(configuration: &configuration::Configuratio
 }
 
 /// 
-pub fn create_users_with_list_input(configuration: &configuration::Configuration, user: Vec<crate::models::User>) -> Result<(), Error<CreateUsersWithListInputError>> {
+pub fn create_users_with_list_input(configuration: &configuration::Configuration, user: Vec<models::User>) -> Result<(), Error<CreateUsersWithListInputError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -180,14 +180,14 @@ pub fn create_users_with_list_input(configuration: &configuration::Configuration
     local_var_req_builder = local_var_req_builder.json(&user);
 
     let local_var_req = local_var_req_builder.build()?;
-    let mut local_var_resp = local_var_client.execute(local_var_req)?;
+    let local_var_resp = local_var_client.execute(local_var_req)?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text()?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         Ok(())
     } else {
+        let local_var_content = local_var_resp.text()?;
         let local_var_entity: Option<CreateUsersWithListInputError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
@@ -216,14 +216,14 @@ pub fn delete_user(configuration: &configuration::Configuration, username: &str)
     };
 
     let local_var_req = local_var_req_builder.build()?;
-    let mut local_var_resp = local_var_client.execute(local_var_req)?;
+    let local_var_resp = local_var_client.execute(local_var_req)?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text()?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         Ok(())
     } else {
+        let local_var_content = local_var_resp.text()?;
         let local_var_entity: Option<DeleteUserError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
@@ -231,7 +231,7 @@ pub fn delete_user(configuration: &configuration::Configuration, username: &str)
 }
 
 /// 
-pub fn get_user_by_name(configuration: &configuration::Configuration, username: &str) -> Result<crate::models::User, Error<GetUserByNameError>> {
+pub fn get_user_by_name(configuration: &configuration::Configuration, username: &str) -> Result<models::User, Error<GetUserByNameError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -244,14 +244,15 @@ pub fn get_user_by_name(configuration: &configuration::Configuration, username: 
     }
 
     let local_var_req = local_var_req_builder.build()?;
-    let mut local_var_resp = local_var_client.execute(local_var_req)?;
+    let local_var_resp = local_var_client.execute(local_var_req)?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text()?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        let local_var_content = local_var_resp.text()?;
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
+        let local_var_content = local_var_resp.text()?;
         let local_var_entity: Option<GetUserByNameError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
@@ -274,14 +275,15 @@ pub fn login_user(configuration: &configuration::Configuration, username: &str, 
     }
 
     let local_var_req = local_var_req_builder.build()?;
-    let mut local_var_resp = local_var_client.execute(local_var_req)?;
+    let local_var_resp = local_var_client.execute(local_var_req)?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text()?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        let local_var_content = local_var_resp.text()?;
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
+        let local_var_content = local_var_resp.text()?;
         let local_var_entity: Option<LoginUserError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
@@ -310,14 +312,14 @@ pub fn logout_user(configuration: &configuration::Configuration, ) -> Result<(),
     };
 
     let local_var_req = local_var_req_builder.build()?;
-    let mut local_var_resp = local_var_client.execute(local_var_req)?;
+    let local_var_resp = local_var_client.execute(local_var_req)?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text()?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         Ok(())
     } else {
+        let local_var_content = local_var_resp.text()?;
         let local_var_entity: Option<LogoutUserError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
@@ -325,7 +327,7 @@ pub fn logout_user(configuration: &configuration::Configuration, ) -> Result<(),
 }
 
 /// This can only be done by the logged in user.
-pub fn update_user(configuration: &configuration::Configuration, username: &str, user: crate::models::User) -> Result<(), Error<UpdateUserError>> {
+pub fn update_user(configuration: &configuration::Configuration, username: &str, user: models::User) -> Result<(), Error<UpdateUserError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
@@ -347,14 +349,14 @@ pub fn update_user(configuration: &configuration::Configuration, username: &str,
     local_var_req_builder = local_var_req_builder.json(&user);
 
     let local_var_req = local_var_req_builder.build()?;
-    let mut local_var_resp = local_var_client.execute(local_var_req)?;
+    let local_var_resp = local_var_client.execute(local_var_req)?;
 
     let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text()?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
         Ok(())
     } else {
+        let local_var_content = local_var_resp.text()?;
         let local_var_entity: Option<UpdateUserError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
         Err(Error::ResponseError(local_var_error))
